@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+import SplashScreen from 'react-native-splash-screen';
 import {
   Text,
   StatusBar,
@@ -9,9 +10,26 @@ import {
   Image,
 } from 'react-native';
 import {NativeModules} from 'react-native';
+import SpeedIcon from './assets/speed-up-icon.svg';
+import Logo from './assets/alien-voice-changer-logo.svg';
+
 const {VoiceChangingModule} = NativeModules;
 
 const App = () => {
+  useEffect(() => {
+    const ac = new AbortController();
+
+    setTimeout(() => {
+      SplashScreen.hide();
+    }, 1000);
+
+    console.log(NativeModules.counter);
+
+    return function cleanup() {
+      ac.abort();
+    };
+  }, []);
+
   const audioTrackURL =
     'https://www.flexymusic.ng/wp-content/uploads/Axel_F_-_Crazy_Frog.mp3';
 
@@ -38,14 +56,12 @@ const App = () => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={'#e4e5ea'} />
-      <Text style={styles.title}>Voice Changer</Text>
+      <Logo style={styles.logo} />
       <Text style={styles.title}> Change Voice Effects </Text>
       <View style={styles.iconsContainer}>
         <TouchableOpacity onPress={() => changeToAlein()}>
           <Image
-            source={{
-              uri: 'https://icons.iconarchive.com/icons/google/noto-emoji-smileys/256/10101-alien-icon.png',
-            }}
+            source={require('./assets/alien-icon.png')}
             resizeMode={'contain'}
             style={styles.icon}
           />
@@ -53,22 +69,14 @@ const App = () => {
         </TouchableOpacity>
         <TouchableOpacity onPress={() => changeToChild()}>
           <Image
-            source={{
-              uri: 'https://pics.freeicons.io/uploads/icons/png/2793494581535699799-512.png',
-            }}
+            source={require('./assets/child-icon.png')}
             resizeMode={'contain'}
             style={styles.icon}
           />
           <Text>Child</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => changeToFast()}>
-          <Image
-            source={{
-              uri: 'https://www.pngjoy.com/pngl/346/6457386_black-arrows-fast-forward-symbol-transparent-png-download.png',
-            }}
-            resizeMode={'contain'}
-            style={styles.icon}
-          />
+          <SpeedIcon />
           <Text>Fast</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => null}>
@@ -98,15 +106,14 @@ const App = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#e4e5ea',
+    backgroundColor: '#1A87B5',
     flex: 1,
     paddingTop: 50,
     alignItems: 'center',
   },
-  title: {
-    fontSize: 20,
-    color: '#000',
-    marginVertical: 25,
+  logo: {
+    marginTop: 45,
+    marginBottom: 25,
   },
   iconsContainer: {
     flexDirection: 'row',
